@@ -1,0 +1,19 @@
+# configs/config_material_system_panels.yaml
+
+# Method directories to scan (relative to project root)
+method_dirs:
+  - "../02_pareto_prediction/MatSciBERT"
+  - "../02_pareto_prediction/MatSciBERT_Full"
+  - "../02_pareto_prediction/Qwen"
+  - "../02_pareto_prediction/Qwen_Full"
+  - "../02_pareto_prediction/Word2Vec"
+
+# Output directory for the per-system PDFs
+output_dir: "figures/selection_plots"
+
+# A single sentinel output so Snakemake can track completion
+done_flag: "figures/selection_plots/_DONE.txt"
+
+plot:
+  grid_shape: [2, 3]
+  dpi: 600

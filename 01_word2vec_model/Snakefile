@@ -1,0 +1,92 @@
+# Import the external utility file
+import utils
+
+
+# Define parameters
+configfile: "config.yaml"
+
+
+rule all:
+    input:
+        config["collected_papers"],
+        config["processed_papers"],
+        config["rule_generate_word2vec"]["model_path"],
+
+rule collect_papers:
+    output:
+        config["collected_papers"]
+    log:
+        "logs/collect_papers.log"  # Log file for this rule
+    params:
+        config_path=config["rule_collect_papers"]["config_path"],
+        keywords=config["rule_collect_papers"]["keywords"],
+        startyear=config["rule_collect_papers"]["startyear"],
+        endyear=config["rule_collect_papers"]["endyear"],
+        openaccess=config["rule_collect_papers"]["openaccess"],
+        output_path=config["collected_papers"]
+    run:
+        # Call the external function
+        utils.update_pybliometrics_config(params.config_path, config["pybliometrics_config"])
+
+        startyear_cmd = f"--startyear {params.startyear}" if params.startyear else ""
+
+        shell("""
+            set -x
+            python script/collect_papers.py \
+                --config_path "{params.config_path}" \
+                --keywords "{params.keywords}" \
+                {startyear_cmd} \
+                --endyear {params.endyear} \
+                --openaccess {params.openaccess} \
+                --output_path "{params.output_path}" > {log} 2>&1  # Redirect output to log
+        """)
+
+
+
+# Rule to process collected papers
+rule process_papers:
+    input:
+        config["collected_papers"]
+    output:
+        config["processed_papers"]
+    log:
+        "logs/process_papers.log"
+    params:
+        input_path=config["collected_papers"],
+        output_path=config["processed_papers"]
+    shell:
+        """
+        python script/process_papers.py \
+            --input_path "{params.input_path}" \
+            --output_path "{params.output_path}" > {log} 2>&1  # Redirect output to log
+        """
+
+# Rule to generate word2vec model
+rule generate_word2vec:
+    input:
+        config["processed_papers"]
+    output:
+        config["rule_generate_word2vec"]["model_path"]
+    log:
+        "logs/generate_word2vec.log"
+    params:
+        input_path=config["processed_papers"],
+        model_path=config["rule_generate_word2vec"]["model_path"],
+        sg=config["rule_generate_word2vec"]["sg"],
+        vector_size=config["rule_generate_word2vec"]["vector_size"],
+        hs=config["rule_generate_word2vec"]["hs"],
+        window=config["rule_generate_word2vec"]["window"],
+        min_count=config["rule_generate_word2vec"]["min_count"],
+        workers=config["rule_generate_word2vec"]["workers"]
+    shell:
+        """
+        python script/generate_word2vec.py \
+            --input_path "{params.input_path}" \
+            --model_path "{params.model_path}" \
+            --sg {params.sg} \
+            --vector_size {params.vector_size} \
+            --hs {params.hs} \
+            --window {params.window} \
+            --min_count {params.min_count} \
+            --workers {params.workers} > {log} 2>&1  # Redirect output to log
+        """

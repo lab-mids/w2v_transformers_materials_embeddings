@@ -1,0 +1,27 @@
+rule all:
+    input:
+        "analysis_results/master_analysis.csv"
+
+
+rule similarity_analysis:
+    input:
+        config="config.yaml"
+    output:
+        touch("analysis_results/.done")
+    shell:
+        """
+        python script/analysis.py --config {input.config}
+        """
+
+
+rule aggregate_similarity_analysis:
+    input:
+        "analysis_results/.done"
+    output:
+        "analysis_results/master_analysis.csv"
+    shell:
+        """
+        python script/aggregate_similarity_analysis.py \
+            --analysis-dir analysis_results \
+            --output {output}
+        """

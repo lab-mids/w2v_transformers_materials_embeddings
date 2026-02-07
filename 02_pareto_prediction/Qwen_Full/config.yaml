@@ -1,0 +1,26 @@
+# Centralized file paths and parameters
+
+# Path to the directory containing processed material systems with similarities
+processed_material_systems: "material_systems_with_similarities"
+
+# Blablador configuration
+blablador:
+  base_url: "https://api.helmholtz-blablador.fz-juelich.de/v1"
+  model: "alias-embeddings"         # or "llama-embed-nemotron-8b"
+  api_key: "Your_API_here"
+
+# Parameters for processing material systems
+rule_process_material_systems:
+  input_directory: "material_systems"
+  concepts: '{"dielectric":"dielectric material property","conductivity":"conductivity material property"}'
+  num_workers: 1
+  done_file: "logs/process_material_systems.done"
+
+# Parameters for calculating Pareto front
+rule_calculate_pareto_front:
+  output_directory: "material_systems_pareto_front"
+  objectives:
+    - Similarity_to_dielectric
+    - Similarity_to_conductivity
+  num_workers: 1
+  done_file: "logs/calculate_pareto_front.done"

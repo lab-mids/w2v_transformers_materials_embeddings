@@ -1,0 +1,36 @@
+# configs/config_word_embedding_distribution.yaml
+
+# Word2Vec / KeyedVectors model
+model_path: "../01_word2vec_model/model/multi_source_papers_electrocatalyst.model"
+
+# Input files (one or many material system CSVs)
+input_files:
+  - "../02_pareto_prediction/Word2Vec/material_systems/Ag_Pd_Pt_material_system.csv"
+  - "../02_pareto_prediction/Word2Vec/material_systems/Ag_Pd_Pt_Ru_material_system.csv"
+  - "../02_pareto_prediction/Word2Vec/material_systems/Ag_Pd_Ru_material_system.csv"
+
+# Output directory + base filename (PDF)
+output_dir: "figures"
+output_basename: "W2V"
+
+# Property words
+word_dielectric: "dielectric"
+word_conductivity: "conductivity"
+
+# Sentinel output so Snakemake can track completion
+# (The PDF is created in output_dir)
+done_flag: "figures/W2V_DONE.txt"
+
+plot:
+  figsize: [12, 5]
+  tsne_perplexity: 30.0
+  tsne_learning_rate: "auto"
+  tsne_n_iter: 1500
+  tsne_random_state: 42
+  standardize_before_tsne: true
+
+  material_alpha: 0.65
+  material_size: 14.0
+  word_size: 70.0
+  dielectric_color: "tab:blue"
+  conductivity_color: "tab:orange"

@@ -1,0 +1,24 @@
+# Where to write the analysis CSVs
+output_dir: analysis_results
+
+# One entry per method
+methods:
+  - name: Word2Vec
+    root: ../02_pareto_prediction/Word2Vec/material_systems_with_similarities
+    pareto_root: ../02_pareto_prediction/Word2Vec/material_systems_pareto_front
+
+  - name: MatSciBERT
+    root: ../02_pareto_prediction/MatSciBERT/material_systems_with_similarities
+    pareto_root: ../02_pareto_prediction/MatSciBERT/material_systems_pareto_front
+
+  - name: MatSciBERT_Full
+    root: ../02_pareto_prediction/MatSciBERT_Full/material_systems_with_similarities
+    pareto_root: ../02_pareto_prediction/MatSciBERT_Full/material_systems_pareto_front
+
+  - name: Qwen
+    root: ../02_pareto_prediction/Qwen/material_systems_with_similarities
+    pareto_root: ../02_pareto_prediction/Qwen/material_systems_pareto_front
+
+  - name: Qwen_Full
+    root: ../02_pareto_prediction/Qwen_Full/material_systems_with_similarities
+    pareto_root: ../02_pareto_prediction/Qwen_Full/material_systems_pareto_front

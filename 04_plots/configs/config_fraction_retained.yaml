@@ -1,0 +1,13 @@
+# configs/config_fraction_retained.yaml
+input_csv: "../03_analysis/analysis_results/master_analysis.csv"
+output_fig: "figures/fraction_retained_all_methods.pdf"
+
+plot:
+  # null = all methods in CSV; or set list like ["W2V", "MatBERT", "Qwen"]
+  methods: null
+
+  # "mean" or "median"
+  aggregate: "mean"
+
+  jitter_width: 0.20
+  dpi: 600

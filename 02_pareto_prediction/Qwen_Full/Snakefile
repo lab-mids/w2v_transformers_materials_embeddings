@@ -1,0 +1,64 @@
+import json
+
+configfile: "config.yaml"
+
+# Pipeline finishes when Pareto step is done
+rule all:
+    input:
+        config["rule_calculate_pareto_front"]["done_file"]
+
+# ---------- Processing rule ----------
+
+rule process_material_systems:
+    input:
+        raw_dir=config["rule_process_material_systems"]["input_directory"]
+    output:
+        processed_dir=directory(config["processed_material_systems"]),
+        done=config["rule_process_material_systems"]["done_file"]
+    log:
+        "logs/process_material_systems.log"
+    params:
+        concepts=config["rule_process_material_systems"]["concepts"],
+        num_workers=config["rule_process_material_systems"]["num_workers"],
+        blablador_base_url=config["blablador"]["base_url"],
+        blablador_model=config["blablador"]["model"],
+        blablador_api_key=config["blablador"]["api_key"],
+    shell:
+        r"""
+        export BLABLADOR_BASE_URL="{params.blablador_base_url}"
+        export BLABLADOR_MODEL="{params.blablador_model}"
+        export BLABLADOR_API_KEY="{params.blablador_api_key}"
+
+        python script/dataset_preprocess.py \
+            --input_directory "{input.raw_dir}" \
+            --output_directory "{output.processed_dir}" \
+            --concepts '{params.concepts}' \
+            --num_workers {params.num_workers} \
+        > "{log}" 2>&1 \
+        && touch "{output.done}"
+        """
+
+# ---------- Pareto rule (depends on processing) ----------
+
+rule calculate_pareto_front:
+    input:
+        processed_done=config["rule_process_material_systems"]["done_file"]
+    output:
+        done=config["rule_calculate_pareto_front"]["done_file"]
+    log:
+        "logs/calculate_pareto_front.log"
+    params:
+        processed_dir=config["processed_material_systems"],
+        out_dir=config["rule_calculate_pareto_front"]["output_directory"],
+        objectives=json.dumps(config["rule_calculate_pareto_front"]["objectives"]),
+        num_workers=config["rule_calculate_pareto_front"]["num_workers"]
+    shell:
+        r"""
+        python script/dataset_pareto_front_cal.py \
+            --input_directory "{params.processed_dir}" \
+            --output_directory "{params.out_dir}" \
+            --objectives '{params.objectives}' \
+            --num_workers {params.num_workers} \
+        > "{log}" 2>&1 \
+        && touch "{output.done}"
+        """

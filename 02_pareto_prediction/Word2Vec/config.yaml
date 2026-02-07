@@ -1,0 +1,36 @@
+# Single-directory version:
+# - "material_systems"            : raw material systems (all reactions)
+# - "material_systems_with_similarities" : after similarity calculation
+# - "material_systems_pareto_front"      : unified Pareto results (union of (max,min) and (min,max))
+
+# Centralized paths
+processed_material_systems: "material_systems_with_similarities"
+pareto_front_output_directory: "material_systems_pareto_front"
+
+# Parameters for processing material systems
+rule_process_material_systems:
+  # Input directory containing material systems
+  input_directory: "material_systems"
+  # Path to the model file
+  model_path: "../../01_word2vec_model/model/multi_source_papers_electrocatalyst.model"
+  # List of properties to calculate similarity
+  property_list:
+    - dielectric
+    - conductivity
+  # Number of workers for parallel processing
+  num_workers: 1
+  # Output done file path
+  done_file: "logs/process_material_systems.done"
+
+# Parameters for calculating Pareto front (script internally does (max,min) and (min,max) and unions them)
+rule_calculate_pareto_front:
+  # Output directory for Pareto front results
+  output_directory: "material_systems_pareto_front"
+  # List of objectives for Pareto front calculation
+  objectives:
+    - Similarity_to_dielectric
+    - Similarity_to_conductivity
+  # Number of workers for parallel processing
+  num_workers: 1
+  # Output done file path
+  done_file: "logs/calculate_pareto_front.done"

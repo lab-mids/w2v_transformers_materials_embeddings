@@ -1,0 +1,28 @@
+name: word_embedding_transformer
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - gensim
+  - pyyaml
+  - requests
+  - nltk
+  - matplotlib
+  - seaborn
+  - notebook
+  - ipywidgets
+  - jupyterlab_widgets
+  - plotly
+  - snakemake
+  - pytest
+  - pip
+  - pip:
+      - matnexus
+      - torch
+      - transformers
+      - pybliometrics

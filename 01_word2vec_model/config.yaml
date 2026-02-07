@@ -1,0 +1,64 @@
+# Configuration file for Snakemake workflow
+# Each section corresponds to a rule in the Snakemake file
+
+# Note: the `pybliometrics` folder needs to be manually created
+
+# Centralized file paths and parameters
+collected_papers: "files/electrocatalyst.csv"
+processed_papers: "files/electrocatalyst_processed_df.csv"
+
+
+# Parameters for collecting papers
+rule_collect_papers:
+  # Path to the configuration file for ScopusDataSource
+  config_path: "pybliometrics/pybliometrics.cfg"
+  # Keywords for the paper query
+  keywords: "electrocatalyst"
+  # Start year for the paper query, or "" for no start year
+  startyear:
+  # End year for the paper query
+  endyear: 2024
+  # Whether to search for open access papers
+  openaccess: true
+
+# Configuration for pybliometrics.cfg, which will be created/updated if it doesn't exist
+#Full content for pybliometrics.cfg
+pybliometrics_config:
+  Directories:
+    AbstractRetrieval: "pybliometrics/Scopus/abstract_retrieval"
+    AffiliationRetrieval: "pybliometrics/affiliation_retrieval"
+    AffiliationSearch: "pybliometrics/affiliation_search"
+    AuthorRetrieval: "pybliometrics/author_retrieval"
+    AuthorSearch: "pybliometrics/author_search"
+    CitationOverview: "pybliometrics/citation_overview"
+    ScopusSearch: "pybliometrics/scopus_search"
+    SerialSearch: "pybliometrics/serial_search"
+    SerialTitle: "pybliometrics/serial_title"
+    PlumXMetrics: "pybliometrics/plumx"
+    SubjectClassifications: "pybliometrics/subject_classification"
+
+  Authentication:
+    APIKey:
+      - "your_scopy_api_key"
+      # Add more API keys as needed, multiple are possible
+
+  Requests:
+    Timeout: 36000
+    Retries: 2
+
+# Parameters for generating word2vec model
+rule_generate_word2vec:
+  # Output path for the generated word2vec model
+  model_path: "model/electrocatalyst.model"
+  # Training algorithm: 1 for skip-gram, 0 for CBOW
+  sg: 1
+  # Dimensionality of the word vectors
+  vector_size: 200
+  # If 1, hierarchical softmax will be used for model training
+  hs: 1
+  # Maximum distance between the current and predicted word within a sentence
+  window: 5
+  # Ignores all words with total frequency lower than this
+  min_count: 1
+  # Number of worker threads to train the model
+  workers: 4

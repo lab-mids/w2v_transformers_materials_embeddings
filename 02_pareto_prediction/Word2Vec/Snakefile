@@ -1,0 +1,60 @@
+import os
+import json
+
+configfile: "config.yaml"
+
+# Top-level rule: whole workflow
+rule all:
+    input:
+        config["rule_process_material_systems"]["done_file"],
+        config["rule_calculate_pareto_front"]["done_file"]
+
+# Rule to process material systems (compute similarities)
+rule process_material_systems:
+    input:
+        config["rule_process_material_systems"]["input_directory"]
+    output:
+        config["rule_process_material_systems"]["done_file"]
+    log:
+        "logs/process_material_systems.log"
+    params:
+        input_directory=config["rule_process_material_systems"]["input_directory"],
+        output_directory=config["processed_material_systems"],
+        model_path=config["rule_process_material_systems"]["model_path"],
+        property_list=json.dumps(
+            config["rule_process_material_systems"]["property_list"]
+        ),
+        num_workers=config["rule_process_material_systems"]["num_workers"]
+    shell:
+        """
+        python script/dataset_preprocess.py \
+            --input_directory "{params.input_directory}" \
+            --output_directory "{params.output_directory}" \
+            --model_path "{params.model_path}" \
+            --property_list '{params.property_list}' \
+            --num_workers {params.num_workers} \
+        && touch "{output}" > {log} 2>&1
+        """
+
+# Rule to calculate Pareto front (union of (max,min) and (min,max) inside the script)
+rule calculate_pareto_front:
+    input:
+        config["rule_process_material_systems"]["done_file"]
+    output:
+        config["rule_calculate_pareto_front"]["done_file"]
+    log:
+        "logs/calculate_pareto_front.log"
+    params:
+        input_directory=config["processed_material_systems"],
+        output_directory=config["rule_calculate_pareto_front"]["output_directory"],
+        objectives=json.dumps(config["rule_calculate_pareto_front"]["objectives"]),
+        num_workers=config["rule_calculate_pareto_front"]["num_workers"]
+    shell:
+        """
+        python script/dataset_pareto_front_cal.py \
+            --input_directory "{params.input_directory}" \
+            --output_directory "{params.output_directory}" \
+            --objectives '{params.objectives}' \
+            --num_workers {params.num_workers} \
+        && touch "{output}" > {log} 2>&1
+        """

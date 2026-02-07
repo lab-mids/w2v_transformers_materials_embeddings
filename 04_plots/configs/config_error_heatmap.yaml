@@ -1,0 +1,20 @@
+# configs/config_error_heatmap.yaml
+input_csv: "../03_analysis/analysis_results/master_analysis.csv"
+output_fig: "figures/error_heatmap_all_methods.pdf"
+
+plot:
+  # null = all methods in CSV; or e.g. ["W2V","MatBERT","Qwen"]
+  methods: null
+
+  # match notebook (False = physical ordering by material_system then overpotential)
+  sort_by_error: false
+
+  # match notebook
+  cmap: "YlOrRd"
+
+  # null = auto (annotate only if small enough)
+  # or set true/false explicitly
+  annotate: null
+
+  max_annot_cells: 80
+  dpi: 600

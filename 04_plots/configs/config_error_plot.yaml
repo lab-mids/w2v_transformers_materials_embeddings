@@ -1,0 +1,16 @@
+# config.yaml
+input_csv: "../03_analysis/analysis_results/master_analysis.csv"
+output_fig: "figures/error_vs_fraction_all_methods.pdf"
+
+plot:
+  # null = use all methods in the CSV
+  # or set e.g.: ["W2V", "MatBERT", "MatBERT_Full", "Qwen", "Qwen_Full"]
+  methods: null
+
+  # match your notebook call (you used use_abs_error=False)
+  use_abs_error: false
+
+  # only draws the zero line when use_abs_error is false (same behavior as your code)
+  annotate_zero_error: true
+
+  dpi: 600
