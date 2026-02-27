@@ -1,6 +1,7 @@
 name: word_embedding_transformer
 channels:
   - conda-forge
+  - bioconda
   - defaults
 dependencies:
   - python=3.12
@@ -26,3 +27,4 @@ dependencies:
       - torch
       - transformers
       - pybliometrics
+      - en_core_web_sm

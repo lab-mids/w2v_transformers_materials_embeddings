@@ -30,7 +30,7 @@ conda activate word_embedding_transformer
 - Snakemake: `01_word2vec_model/Snakefile`.
 - Notes:
   - You must create `01_word2vec_model/pybliometrics/` and provide API keys in `01_word2vec_model/pybliometrics/pybliometrics.cfg`.
-  - The config has a placeholder `your_scopy_api_key` that must be replaced.
+  - The configuration file for the workflow in the root folder of the 01_* step`config.yaml` has a placeholder `your_scopy_api_key` that must be replaced with your own key.
 - Run:
 
 ```bash
