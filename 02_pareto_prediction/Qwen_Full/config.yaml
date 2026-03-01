@@ -7,11 +7,11 @@ processed_material_systems: "material_systems_with_similarities"
 blablador:
   base_url: "https://api.helmholtz-blablador.fz-juelich.de/v1"
   model: "alias-embeddings"         # or "llama-embed-nemotron-8b"
-  api_key: "Your_API_here"
+  api_key: "glpat-LfwVrx4xmlrp0yZG8a-4ZW86MQp1Om11agk.01.0z1qfbl30"
 
 # Parameters for processing material systems
 rule_process_material_systems:
-  input_directory: "material_systems"
+  input_directory: "../material_systems"
   concepts: '{"dielectric":"dielectric material property","conductivity":"conductivity material property"}'
   num_workers: 1
   done_file: "logs/process_material_systems.done"

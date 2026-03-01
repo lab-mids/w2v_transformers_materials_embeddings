@@ -10,9 +10,9 @@ pareto_front_output_directory: "material_systems_pareto_front"
 # Parameters for processing material systems
 rule_process_material_systems:
   # Input directory containing material systems
-  input_directory: "material_systems"
+  input_directory: "../material_systems"
   # Path to the model file
-  model_path: "../../01_word2vec_model/model/multi_source_papers_electrocatalyst.model"
+  model_path: "../../01_word2vec_model/model/electrocatalyst.model"
   # List of properties to calculate similarity
   property_list:
     - dielectric

@@ -1,13 +1,13 @@
 # configs/config_word_embedding_distribution.yaml
 
 # Word2Vec / KeyedVectors model
-model_path: "../01_word2vec_model/model/multi_source_papers_electrocatalyst.model"
+model_path: "../01_word2vec_model/model/electrocatalyst.model"
 
 # Input files (one or many material system CSVs)
 input_files:
-  - "../02_pareto_prediction/Word2Vec/material_systems/Ag_Pd_Pt_material_system.csv"
-  - "../02_pareto_prediction/Word2Vec/material_systems/Ag_Pd_Pt_Ru_material_system.csv"
-  - "../02_pareto_prediction/Word2Vec/material_systems/Ag_Pd_Ru_material_system.csv"
+  - "../02_pareto_prediction/material_systems/Ag_Pd_Pt_material_system.csv"
+  - "../02_pareto_prediction/material_systems/Ag_Pd_Pt_Ru_material_system.csv"
+  - "../02_pareto_prediction/material_systems/Ag_Pd_Ru_material_system.csv"
 
 # Output directory + base filename (PDF)
 output_dir: "figures"

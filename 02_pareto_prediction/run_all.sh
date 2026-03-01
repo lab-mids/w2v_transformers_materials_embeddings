@@ -1,22 +1,36 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# How many cores/threads Snakemake should use per workflow
-COMMON_ARGS="-j 1"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
 
-echo "=== Running workflow 1 ==="
-snakemake -s MatSciBERT/Snakefile $COMMON_ARGS
+if ! command -v snakemake >/dev/null 2>&1; then
+  echo "Error: snakemake is not available in PATH." >&2
+  echo "Activate the environment that provides Snakemake, e.g.:" >&2
+  echo "  conda activate word_embedding_transformer" >&2
+  exit 1
+fi
 
-echo "=== Running workflow 2  ==="
-snakemake -s MatSciBERT_Full/Snakefile $COMMON_ARGS
+# How many cores/threads Snakemake should use per workflow.
+# Override by running: COMMON_ARGS="-j 4" ./run_all.sh
+COMMON_ARGS="${COMMON_ARGS:--j 1}"
 
-echo "=== Running workflow 3  ==="
-snakemake -s Qwen/Snakefile $COMMON_ARGS
+workflows=(
+  "MatSciBERT"
+  "MatSciBERT_Full"
+  "Qwen"
+  "Qwen_Full"
+  "Word2Vec"
+)
 
-echo "=== Running workflow 4 ==="
-snakemake -s Qwen_Full/Snakefile $COMMON_ARGS
-
-echo "=== Running workflow 5 ==="
-snakemake -s Word2Vec/Snakefile $COMMON_ARGS
+for i in "${!workflows[@]}"; do
+  wf="${workflows[$i]}"
+  echo "=== Running workflow $((i + 1))/${#workflows[@]}: $wf ==="
+  (
+    cd "$wf"
+    snakemake -s Snakefile $COMMON_ARGS
+  )
+  echo
+done
 
 echo "=== All workflows finished successfully ==="

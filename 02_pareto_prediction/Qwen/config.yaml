@@ -3,10 +3,16 @@
 # Path to the directory containing processed material systems with similarities
 processed_material_systems: "material_systems_with_similarities"
 
+# Blablador configuration
+blablador:
+  base_url: "https://api.helmholtz-blablador.fz-juelich.de/v1"
+  model: "alias-embeddings"         # or "llama-embed-nemotron-8b"
+  api_key: "glpat-LfwVrx4xmlrp0yZG8a-4ZW86MQp1Om11agk.01.0z1qfbl30"
+
 # Parameters for processing material systems
 rule_process_material_systems:
   # Input directory containing raw material systems
-  input_directory: "material_systems"
+  input_directory: "../material_systems"
   # Concepts (JSON dict as string, passed to --concepts)
   concepts: '{"dielectric":"dielectric material property","conductivity":"conductivity material property"}'
   # Number of workers for parallel processing

@@ -6,7 +6,7 @@ processed_material_systems: "material_systems_with_similarities"
 # Parameters for processing material systems
 rule_process_material_systems:
   # Input directory containing raw material systems
-  input_directory: "material_systems"
+  input_directory: "../material_systems"
   # Concepts (JSON dict as string, passed to --concepts)
   concepts: '{"dielectric":"dielectric material property","conductivity":"conductivity material property"}'
   # Number of workers for parallel processing

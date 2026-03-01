@@ -19,9 +19,20 @@ rule process_material_systems:
         "logs/process_material_systems.log"
     params:
         concepts=config["rule_process_material_systems"]["concepts"],
-        num_workers=config["rule_process_material_systems"]["num_workers"]
+        num_workers=config["rule_process_material_systems"]["num_workers"],
+        blablador_base_url=config.get("blablador", {}).get(
+            "base_url", "https://api.helmholtz-blablador.fz-juelich.de/v1"
+        ),
+        blablador_model=config.get("blablador", {}).get("model", "alias-embeddings"),
+        blablador_api_key=config.get("blablador", {}).get("api_key", ""),
     shell:
         r"""
+        export BLABLADOR_BASE_URL="{params.blablador_base_url}"
+        export BLABLADOR_MODEL="{params.blablador_model}"
+        if [ -n "{params.blablador_api_key}" ]; then
+            export BLABLADOR_API_KEY="{params.blablador_api_key}"
+        fi
+
         python script/dataset_preprocess.py \
             --input_directory "{input.raw_dir}" \
             --output_directory "{output.processed_dir}" \

@@ -19,6 +19,16 @@ conda env create -f word_embedding_transformer.yml
 conda activate word_embedding_transformer
 ```
 
+- Install the spaCy English model required by `01_word2vec_model/script/process_papers.py`:
+
+```bash
+python -m spacy download en_core_web_sm
+```
+
+- MatSciBERT note:
+  - No separate MatSciBERT installation is required; `torch` and `transformers` in `word_embedding_transformer.yml` are sufficient.
+  - `MatSciBERT` and `MatSciBERT_Full` workflows download `m3rg-iitd/matscibert` automatically on first run via Hugging Face, so internet access is required at least once.
+
 **Directory Map (Where To Work)**
 - `01_word2vec_model`: Collect papers, process text, train word2vec.
 - `02_pareto_prediction`: Compute similarities + Pareto fronts for multiple embedding models.
@@ -29,8 +39,9 @@ conda activate word_embedding_transformer
 - Config: `01_word2vec_model/config.yaml`.
 - Snakemake: `01_word2vec_model/Snakefile`.
 - Notes:
-  - You must create `01_word2vec_model/pybliometrics/` and provide API keys in `01_word2vec_model/pybliometrics/pybliometrics.cfg`.
-  - The configuration file for the workflow in the root folder of the 01_* step`config.yaml` has a placeholder `your_scopy_api_key` that must be replaced with your own key.
+  - Set Scopus API key(s) in `01_word2vec_model/config.yaml` under `pybliometrics_config -> Authentication -> APIKey`.
+  - Create `01_word2vec_model/pybliometrics/` before the first run; the workflow will create/update `01_word2vec_model/pybliometrics/pybliometrics.cfg` from `config.yaml`.
+  - Ensure `en_core_web_sm` is installed in the active environment before running the workflow.
 - Run:
 
 ```bash
@@ -43,12 +54,26 @@ snakemake -s Snakefile -j 1
   - `Word2Vec`, `MatSciBERT`, `MatSciBERT_Full`, `Qwen`, `Qwen_Full`.
 - Each subdir has its own `Snakefile` and `config.yaml`.
 - Required inputs:
-  - Each config expects an `input_directory` (default `material_systems`).
-  - You need to create and populate that folder with material-system CSVs before running.
+  - Each config expects an `input_directory` (default `../material_systems`), so all methods share `02_pareto_prediction/material_systems`.
+  - Create and populate `02_pareto_prediction/material_systems` with material-system CSVs before running.
+  - Input filenames should end with `_material_system.csv` (for example `Ni_Pd_Pt_Ru_material_system.csv`).
+  - Each CSV should contain composition columns named by element symbols (for example `Ni`, `Pd`, `Pt`, `Ru`) and at least one current column such as `Current_at_100mV` for downstream analysis.
+- Reference datasets (recommended format examples):
+  - ORR dataset: [https://doi.org/10.5281/zenodo.13992986](https://doi.org/10.5281/zenodo.13992986)
+  - HER dataset: [https://doi.org/10.5281/zenodo.14959252](https://doi.org/10.5281/zenodo.14959252)
+  - OER dataset (Ni-Pd-Pt-Ru): [https://doi.org/10.5281/zenodo.14891704](https://doi.org/10.5281/zenodo.14891704)
 - API key requirement (Qwen/Qwen_Full):
-  - The Qwen workflows call a Blablador embeddings endpoint and require `BLABLADOR_API_KEY` in the environment.
+  - Both workflows require `BLABLADOR_API_KEY` at runtime.
+  - `Qwen` and `Qwen_Full` both read `blablador` settings from their `config.yaml` and export them in the workflow.
+  - Filling `blablador.api_key` in either `Qwen/config.yaml` or `Qwen_Full/config.yaml` works.
   - Optional overrides: `BLABLADOR_BASE_URL` and `BLABLADOR_MODEL`.
-  - `Qwen_Full/config.yaml` also contains an `api_key` field used by its Snakefile; prefer exporting the env var to avoid committing secrets.
+  - Recommended usage for both workflows is still shell env vars (to avoid storing secrets in repo files), for example:
+
+```bash
+export BLABLADOR_API_KEY="your_api_key"
+export BLABLADOR_BASE_URL="https://api.helmholtz-blablador.fz-juelich.de/v1"
+export BLABLADOR_MODEL="alias-embeddings"
+```
 - Run one model:
 
 ```bash

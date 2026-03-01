@@ -17,7 +17,7 @@ rule_collect_papers:
   # Start year for the paper query, or "" for no start year
   startyear:
   # End year for the paper query
-  endyear: 2024
+  endyear: 2010
   # Whether to search for open access papers
   openaccess: true
 
@@ -39,7 +39,7 @@ pybliometrics_config:
 
   Authentication:
     APIKey:
-      - "your_scopy_api_key"
+      - "a4cd12e1882b0797dccc507062502f93"
       # Add more API keys as needed, multiple are possible
 
   Requests:
