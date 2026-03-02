@@ -27,4 +27,3 @@ dependencies:
       - torch
       - transformers
       - pybliometrics
-      - en_core_web_sm
