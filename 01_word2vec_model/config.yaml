@@ -39,7 +39,7 @@ pybliometrics_config:
 
   Authentication:
     APIKey:
-      - "a4cd12e1882b0797dccc507062502f93"
+      - "YOUR_API_KEY_HERE"
       # Add more API keys as needed, multiple are possible
 
   Requests:
